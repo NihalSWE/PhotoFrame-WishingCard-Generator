@@ -1,0 +1,20 @@
+{% extends "PhotoUpload/base.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">Welcome to PhotoFrame and Wishing Card Generator</h1>
+            <p class="lead">Create stunning photo frames and personalized wishing cards in just a few clicks!</p>
+            <div class="d-grid gap-3">
+                <a href="{% url 'photoupload' %}" class="btn btn-primary btn-lg">Create PhotoFrame</a>
+                <a href="{% url 'wishingcard' %}" class="btn btn-success btn-lg">Create Wishing Card</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

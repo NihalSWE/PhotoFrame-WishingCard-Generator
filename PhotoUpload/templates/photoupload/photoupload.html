@@ -1,0 +1,66 @@
+{% extends "PhotoUpload/base.html" %}
+
+{% block title %} PhotoFrame {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="text-center mt-5 mb-4">Photo Frame</h1>
+    
+    <!-- Form to upload photo frame -->
+    <form method="post" enctype="multipart/form-data" class="mb-4" id="photo-frame-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg">Upload</button>
+        </div>
+    </form>
+    
+    <hr>
+    
+    <div class="row justify-content-center">
+        {% for photo_frame in photo_frames %}
+            <div class="col-md-6 col-lg-4 mb-5">
+                <div class="card shadow-sm position-relative" style="background-color: rgba(0, 0, 0, 0.7);">
+                    <div class="square-image-wrapper rounded-circle mt-4 mx-auto d-block position-relative" style="width: 300px; height: 300px; overflow: hidden;">
+                        <img src="{{ photo_frame.image.url }}" alt="{{ photo_frame.name }}" class="card-img-top img-fluid" style="width: 100%; height: 300px; object-fit: cover;">
+                        <div class="card-design-wrapper position-absolute top-0 start-0 mt-1" style="width: 100%; height: 100%; background-image: url('{{ photo_frame.card_design.url }}'); background-size: cover; background-position: center;"></div>
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-white">{{ photo_frame.name }}</h5>
+                        <a href="{% url 'download_photo_frame' pk=photo_frame.pk %}" class="btn btn-outline-light mt-3">Download</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .square-image-wrapper {
+        border: 5px solid white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card {
+        border: none;
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+    .card-title, .btn {
+        color: white;
+    }
+    .btn-outline-light {
+        border-color: white;
+        color: white;
+    }
+    .btn-outline-light:hover {
+        background-color: white;
+        color: black;
+    }
+</style>
+
+{% endblock %}
+
+
+
