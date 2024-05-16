@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,HttpResponse
-from .forms import PhotoFrameForm,WishingCardForm
-from .models import PhotoFrame,WishingCard
+from .forms import WishingCardForm
+from .models import PhotoFrame,WishingCard,CardDesign
 from PIL import Image
 
 def base(request):
@@ -11,20 +11,20 @@ def home(request):
 
 def photoupload(request):
     if request.method == 'POST':
-        form = PhotoFrameForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('photoupload')
+        name = request.POST.get('name')
+        image = request.FILES.get('image')
+        card_design_id = request.POST.get('card_design')
+        card_design = CardDesign.objects.get(pk=card_design_id)
+        PhotoFrame.objects.create(name=name, image=image, card_design=card_design)
+        
+
+        return redirect('photoupload')
     else:
-        form = PhotoFrameForm()
-    
-    photo_frames = PhotoFrame.objects.all()
-    return render(request, 'PhotoUpload/photoupload.html', {'form': form, 'photo_frames': photo_frames})
+        card_designs = CardDesign.objects.all()
+        photo_frames = PhotoFrame.objects.all()
+        return render(request, 'PhotoUpload/photoupload.html', {'card_designs': card_designs, 'photo_frames': photo_frames})
 
 
-
-
-    
 
 def merge_images(image_path, card_design_path):
     image = Image.open(image_path)
@@ -39,7 +39,7 @@ def download_photo_frame(request, pk):
     try:
         photo_frame = PhotoFrame.objects.get(pk=pk)
         image_path = photo_frame.image.path
-        card_design_path = photo_frame.card_design.path
+        card_design_path = photo_frame.card_design.card_design.path   
         combined_image = merge_images(image_path, card_design_path)
         combined_image_path = 'combined_photo_frame.png'
         combined_image.save(combined_image_path)
@@ -56,7 +56,6 @@ def download_photo_frame(request, pk):
 
 
 
-
 from django.http import HttpResponse
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
@@ -66,18 +65,16 @@ import tempfile
 
 
 def wishingcard(request):
-    latest_wishing_card = WishingCard.objects.order_by('-id').first()
-
     if request.method == 'POST':
-        form = WishingCardForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            latest_wishing_card = form.instance  # Update the latest wishing card
-            return redirect('wishingcard')
+        name = request.POST.get('name')
+        designation = request.POST.get('designation')
+        background_image = request.FILES.get('background_image')
+        WishingCard.objects.create(name=name, designation=designation, background_image=background_image)
+
+        return redirect('wishingcard')
     else:
-        form = WishingCardForm()
-    
-    return render(request, 'PhotoUpload/wishingcard.html', {'form': form, 'wishing_card': latest_wishing_card})
+        wishing_cards = WishingCard.objects.all()
+        return render(request, 'PhotoUpload/wishingcard.html', {'wishing_cards': wishing_cards})
 
 
 
