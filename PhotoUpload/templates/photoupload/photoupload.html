@@ -7,21 +7,21 @@
 <div class="container py-5">
     <h1 class="text-center mb-5 display-4" style="background-color: #007bff; color: #fff; padding: 10px;">Create Your Photo Frame</h1>
 
-
-    <form method="post" enctype="multipart/form-data" class="mb-5 p-4 shadow rounded bg-white" id="photo-frame-form">
+    <form method="post" enctype="multipart/form-data" class="mb-5 p-4 shadow rounded bg-light" id="photo-frame-form">
         {% csrf_token %}
         <div class="mb-4">
-            <label for="name" class="form-label">Name:</label>
+            <label for="name" class="form-label">Your Name:</label>
             <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Enter your name" required>
         </div>
         
         <div class="mb-4">
-            <label for="image" class="form-label">Profile Picture:</label>
+            <label for="image" class="form-label">Upload Profile Picture:</label>
             <input type="file" class="form-control form-control-lg" id="image" name="image" required>
+            <small class="form-text text-muted">Please upload a clear photo of yourself.</small>
         </div>
         
         <div class="mb-4">
-            <label for="card_design" class="form-label">Choose Card Design:</label>
+            <p class="form-label mb-3">Choose Card Design:</p>
             <div class="d-flex flex-wrap justify-content-center">
                 {% for card_design in card_designs %}
                     <div class="form-check form-check-inline m-2">
@@ -35,10 +35,9 @@
         </div>
         
         <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-lg px-5">Create Photo Frame</button>
+            <button type="submit" class="btn btn-primary btn-lg px-5 btn-create-photo-frame">Create Your Photo Frame</button>
         </div>
     </form>
-    
 
     <hr class="my-5">
     <h1 class="text-center mb-5 display-4" style="background-color: #007bff; color: #fff; padding: 10px;">Photo Frames</h1>
@@ -162,4 +161,28 @@
         }
     }
 </style>
+
+<script>
+    // Add event listener for card design selection
+    document.querySelectorAll('.form-check-input').forEach(input => {
+        input.addEventListener('change', function() {
+            // Remove border from all card designs
+            document.querySelectorAll('.card-design-label').forEach(label => {
+                label.classList.remove('card-design-selected');
+            });
+
+            // Add border to selected card design
+            this.nextElementSibling.classList.add('card-design-selected');
+        });
+    });
+
+    // Update button text based on form status
+    const form = document.getElementById('photo-frame-form');
+    const button = form.querySelector('.btn-create-photo-frame');
+
+    form.addEventListener('submit', function() {
+        button.textContent = 'Creating Photo Frame...';
+        button.disabled = true;
+    });
+</script>
 {% endblock %}
