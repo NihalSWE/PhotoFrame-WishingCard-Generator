@@ -5,7 +5,8 @@
 
 {% block body %}
 <div class="container py-5">
-    <h1 class="text-center mb-5 display-4">Create Your Photo Frame</h1>
+    <h1 class="text-center mb-5 display-4" style="background-color: #007bff; color: #fff; padding: 10px;">Create Your Photo Frame</h1>
+
 
     <form method="post" enctype="multipart/form-data" class="mb-5 p-4 shadow rounded bg-white" id="photo-frame-form">
         {% csrf_token %}
@@ -37,8 +38,10 @@
             <button type="submit" class="btn btn-primary btn-lg px-5">Create Photo Frame</button>
         </div>
     </form>
+    
 
     <hr class="my-5">
+    <h1 class="text-center mb-5 display-4" style="background-color: #007bff; color: #fff; padding: 10px;">Photo Frames</h1>
 
     <div class="row justify-content-center">
         {% for photo_frame in photo_frames %}
