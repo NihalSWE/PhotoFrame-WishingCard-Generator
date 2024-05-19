@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from .forms import WishingCardForm
-from .models import PhotoFrame,WishingCard,CardDesign
+from .models import PhotoFrame,WishingCard,CardDesign,BgImage
 from PIL import Image
 from django.contrib.auth import logout
 from django.http import JsonResponse
@@ -66,25 +66,28 @@ import tempfile
 
 
 
-
 def wishingcard(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         designation = request.POST.get('designation')
-        background_image = request.FILES.get('background_image')
-        WishingCard.objects.create(name=name, designation=designation, background_image=background_image)
+        background_image_id = request.POST.get('background_image') 
+        background_image = get_object_or_404(BgImage, pk=background_image_id)  
 
+        WishingCard.objects.create(name=name, designation=designation, background_image=background_image)
         return redirect('wishingcard')
     else:
-        wishing_cards = WishingCard.objects.all()
-        return render(request, 'PhotoUpload/wishingcard.html', {'wishing_cards': wishing_cards})
-
+        background_images = BgImage.objects.all()
+        latest_wishing_card = WishingCard.objects.order_by('-id').first()
+        return render(request, 'PhotoUpload/wishingcard.html', {
+            'background_images': background_images,
+            'latest_wishing_card': latest_wishing_card,
+        })
 
 
 
 def download_wishing_card(request, pk):
     wishing_card = WishingCard.objects.get(pk=pk)
-    image_path = wishing_card.background_image.path
+    image_path = wishing_card.background_image.background_image.path
 
 
     background_image = Image.open(image_path)
@@ -229,3 +232,13 @@ def add_card_design(request):
         return redirect('add_card_design')  # Redirect to the same page after processing the POST request
 
     return render(request, 'dist/add_card_design.html', {'error': 'No file uploaded.' if request.method == 'POST' else '', 'new_card_design': new_card_design})
+
+def add_bg_image(request):
+    new_bg_image = None
+    if request.method == 'POST' and request.FILES.get('bg_image'):
+        bg_image = request.FILES['bg_image']
+        new_bg_image = BgImage.objects.create(background_image=bg_image)
+        messages.success(request, 'Background image added successfully.')
+        return redirect('add_bg_image')  # Redirect to the same page after processing the POST request
+    return render(request, 'dist/add_bg_image.html', {'error': 'No file uploaded.' if request.method == 'POST' else '', 
+    'new_bg_image': new_bg_image})

@@ -47,11 +47,18 @@ class PhotoFrame(models.Model):
     
 
 
+
+class BgImage(models.Model):
+    background_image = models.ImageField(upload_to='background_image', default='default_card.png')
+
+    def __str__(self):
+        return self.background_image.url
+
+
 class WishingCard(models.Model):
     name = models.CharField(max_length=100)
     designation = models.CharField(max_length=100, default="FDL Family")
-    background_image = models.ImageField(upload_to='wishing_card_backgrounds', default='default_background.png')
-
+    background_image = models.ForeignKey(BgImage, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 

@@ -1,6 +1,6 @@
 # forms.py
 from django import forms
-from .models import PhotoFrame, WishingCard,CustomUser
+from .models import PhotoFrame, WishingCard,CustomUser,BgImage
 import os
 class PhotoFrameForm(forms.ModelForm):
     card_design_choices = [
@@ -22,7 +22,13 @@ class WishingCardForm(forms.ModelForm):
     class Meta:
         model = WishingCard
         fields = ['name', 'designation', 'background_image']
+        widgets = {
+            'background_image': forms.RadioSelect
+        }
 
+    def _init_(self, *args, **kwargs):
+        super(WishingCardForm, self)._init_(*args, **kwargs)
+        self.fields['background_image'].queryset = BgImage.objects.all()
 
 
 #----Admin Panel -----

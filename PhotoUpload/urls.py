@@ -31,5 +31,5 @@ urlpatterns = [
     path('ShowWishingCards',views.ShowWishingCards,name="ShowWishingCards"),
 
      path('add_card_design/', views.add_card_design, name='add_card_design'),
-
+     path('add_bg_image/',views.add_bg_image,name="add_bg_image"),
 ]

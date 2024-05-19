@@ -1,75 +1,181 @@
 {% extends "PhotoUpload/base.html" %}
+{% load static %}
 
-{% block title %} Wishing Card {% endblock %}
+{% block title %}Wishing Card{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1 class="text-center mt-5 mb-4">Creating Wishing Card</h1>
+<div class="container py-5">
+    <h1 class="text-center mb-5 display-4 text-white bg-primary py-3 rounded">Create Your Wishing Card</h1>
 
     <!-- Form to create wishing card -->
-    <form method="post" enctype="multipart/form-data" class="mb-4" id="wishing-card-form">
+    <form method="post" enctype="multipart/form-data" class="mb-5 p-4 shadow rounded bg-light" id="wishing-card-form">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" name="name">
+        <div class="mb-4">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" class="form-control form-control-lg" id="name" name="name" required>
         </div>
-        <div class="form-group">
-            <label for="designation">Designation:</label>
-            <input type="text" class="form-control" id="designation" name="designation">
+        <div class="mb-4">
+            <label for="designation" class="form-label">Designation:</label>
+            <input type="text" class="form-control form-control-lg" id="designation" name="designation" required>
         </div>
-        <div class="form-group">
-            <label for="background_image">Background Image:</label>
-            <input type="file" class="form-control-file" id="background_image" name="background_image">
+        <div class="mb-4">
+            <p class="form-label mb-3">Choose Background Image:</p>
+            <div class="d-flex flex-wrap justify-content-center">
+                {% for bg_image in background_images %}
+                    <div class="form-check form-check-inline m-2">
+                        <input class="form-check-input d-none" type="radio" name="background_image" id="bg_image_{{ bg_image.id }}" value="{{ bg_image.id }}" required>
+                        <label class="form-check-label card-design-label" for="bg_image_{{ bg_image.id }}">
+                            <img src="{{ bg_image.background_image.url }}" alt="Background Image {{ bg_image.id }}" class="card-design-image rounded shadow">
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
         <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-lg">Create</button>
+            <button type="submit" class="btn btn-primary btn-lg px-5 btn-create-wishing-card">Create Wishing Card</button>
         </div>
     </form>
 
-    <hr>
+    <hr class="my-5">
+    <h2 class="text-center mb-5 display-4 text-white bg-primary py-3 rounded">Generated Wishing Card</h2>
 
-    <h2 class="text-center mt-5">Generating Wishing Card</h2>
-
-    {% if wishing_cards %}
-    <div class="card shadow-sm text-center mt-5 position-relative" style="width: 500px; height: 500px; margin: 5rem auto; overflow: hidden; border: none;">
-        <img src="{{ wishing_cards.0.background_image.url }}" class="card-img-top" alt="Wishing Card Background" style="width: 100%; height: 100%; object-fit: cover;">
-        <div class="position-absolute text-center" style="top: 80%; left: 50%; transform: translate(-50%, -50%); color: white;">
-            <h5 class="card-title" style="font-size: 1rem;">{{ wishing_cards.0.name }}</h5>
-            <p class="card-text mb-4" style="margin-top: -0.5rem; font-size: 0.9rem;">{{ wishing_cards.0.designation }}</p>
+    {% if latest_wishing_card %}
+    <div class="card shadow-sm text-center mt-5 position-relative" style="width: 500px; height: 500px; margin: 0 auto; overflow: hidden; border: none;">
+        <img src="{{ latest_wishing_card.background_image.background_image.url }}" class="card-img-top" alt="Wishing Card Background" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="position-absolute text-center card-text-overlay">
+            <h5 class="card-title text-white">{{ latest_wishing_card.name }}</h5>
+            <p class="card-text text-white">{{ latest_wishing_card.designation }}</p>
         </div>
     </div>
-    
     <div class="text-center mt-3">
-        <a href="{% url 'download_wishing_card' pk=wishing_cards.0.pk %}" class="btn btn-outline-primary btn-lg">Download</a>
+        <a href="{% url 'download_wishing_card' pk=latest_wishing_card.pk %}" class="btn btn-outline-primary btn-lg">Download</a>
     </div>
     {% else %}
     <div class="text-center mt-5">
         <p>No wishing cards available.</p>
     </div>
     {% endif %}
-
 </div>
 
 <style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .form-control-lg {
+        padding: 15px;
+        font-size: 1.25rem;
+        border-radius: 0.3rem;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #495057;
+    }
+
+    .card-design-label {
+        cursor: pointer;
+    }
+
+    .card-design-image {
+        width: 150px;
+        height: auto;
+        border: 2px solid transparent;
+        transition: border-color 0.3s ease;
+    }
+
+    .card-design-image:hover,
+    .form-check-input:checked + .card-design-label .card-design-image {
+        border: 2px solid #007bff;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.25rem;
+        border-radius: 0.3rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-outline-primary {
+        border-color: #007bff;
+        color: #007bff;
+        padding: 10px 20px;
+        font-size: 1.25rem;
+        border-radius: 0.3rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
     .card {
         border: none;
+        border-radius: 1rem;
+        overflow: hidden;
     }
-    .btn-outline-primary {
-        border-color: black;
-        color: black;
-        transition: background-color 0.3s;
-        margin-top:-70px;
-    }
-    .btn-outline-primary:hover {
-        background-color: primary;
-        color: white;
-    }
+
     .card-title {
         font-size: 1.5rem;
+        font-weight: bold;
     }
+
     .card-text {
         font-size: 1.2rem;
     }
+
+    .card-text-overlay {
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .card-design-image {
+            width: 100px;
+        }
+
+        .card {
+            width: 90%;
+            height: auto;
+        }
+
+        .card-text-overlay {
+            font-size: 1rem;
+        }
+    }
 </style>
 
+<script>
+    // Add event listener for background image selection
+    document.querySelectorAll('.form-check-input').forEach(input => {
+        input.addEventListener('change', function() {
+            // Remove border from all background images
+            document.querySelectorAll('.card-design-label').forEach(label => {
+                label.classList.remove('card-design-selected');
+            });
+
+            // Add border to selected background image
+            this.nextElementSibling.classList.add('card-design-selected');
+        });
+    });
+
+    // Update button text based on form status
+    const form = document.getElementById('wishing-card-form');
+    const button = form.querySelector('.btn-create-wishing-card');
+
+    form.addEventListener('submit', function() {
+        button.textContent = 'Creating Wishing Card...';
+        button.disabled = true;
+    });
+</script>
 {% endblock %}

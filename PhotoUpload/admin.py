@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PhotoFrame, WishingCard, CardDesign
+from .models import PhotoFrame, WishingCard, CardDesign,BgImage
 
 # Register your models here.
 
@@ -14,6 +14,12 @@ class WishingCardAdmin(admin.ModelAdmin):
 @admin.register(CardDesign)
 class CardDesignAdmin(admin.ModelAdmin):
     list_display = ('id', 'card_design')
+
+
+@admin.register(BgImage)
+class BgImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'background_image')
+
 
 from .models import CustomUser
 

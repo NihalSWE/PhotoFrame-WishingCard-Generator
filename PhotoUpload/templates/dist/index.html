@@ -130,6 +130,13 @@
                             <span class="align-middle">Card Designs</span>
                         </a>
                     </li>
+                    <!-- Background Image -->
+                    <li class="sidebar-item {% if request.resolver_match.url_name == 'add_bg_image' %}active{% endif %}">
+                        <a class="sidebar-link" href="{% url 'add_bg_image' %}">
+                            <i class="align-middle" data-feather="credit-card"></i> 
+                            <span class="align-middle">BackGround Image</span>
+                        </a>
+                    </li>
                     <!-- Wishing Cards -->
                     <li class="sidebar-item {% if request.resolver_match.url_name == 'ShowWishingCards' %}active{% endif %}">
                         <a class="sidebar-link" href="{% url 'ShowWishingCards' %}">
