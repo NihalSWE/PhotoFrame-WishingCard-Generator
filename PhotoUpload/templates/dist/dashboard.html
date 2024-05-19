@@ -1,0 +1,67 @@
+{% extends 'dist/index.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+  <h1 class="h3 mb-4 text-primary font-weight-bold"><strong>Analytics</strong> Dashboard</h1>
+  <div class="row">
+    <!-- Total Wishing Cards Uploaded -->
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card border-0 rounded-lg shadow-sm h-100">
+        <div class="card-body text-center d-flex flex-column justify-content-center">
+          <h5 class="card-title text-muted">Total Wishing Cards Uploaded</h5>
+          <p class="card-text display-4 font-weight-bold text-primary">{{ total_wishing_cards_uploaded }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- Total Photo Frames Created -->
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card border-0 rounded-lg shadow-sm h-100">
+        <div class="card-body text-center d-flex flex-column justify-content-center">
+          <h5 class="card-title text-muted">Total Photo Frames Created</h5>
+          <p class="card-text display-4 font-weight-bold text-primary">{{ total_photo_frames_created }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+  body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+  }
+
+  h1, .card-title {
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  .card {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-primary {
+    color: #007bff !important;
+  }
+
+  .text-muted {
+    color: #6c757d !important;
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  .card-text {
+    font-size: 2.5rem;
+  }
+</style>
+{% endblock %}

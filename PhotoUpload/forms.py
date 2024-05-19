@@ -1,6 +1,6 @@
 # forms.py
 from django import forms
-from .models import PhotoFrame, WishingCard
+from .models import PhotoFrame, WishingCard,CustomUser
 import os
 class PhotoFrameForm(forms.ModelForm):
     card_design_choices = [
@@ -22,3 +22,25 @@ class WishingCardForm(forms.ModelForm):
     class Meta:
         model = WishingCard
         fields = ['name', 'designation', 'background_image']
+
+
+
+#----Admin Panel -----
+from django.contrib.auth.forms import AuthenticationForm
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username and password:
+            # Check if the username exists with exact case
+            user = CustomUser.objects.filter(username__exact=username).first()
+            if user is None:
+                raise forms.ValidationError("Invalid username or password.")
+            # Check if the provided password is valid for the user
+            if not user.check_password(password):
+                raise forms.ValidationError("Invalid username or password.")
+        return self.cleaned_data

@@ -1,0 +1,104 @@
+{% extends 'dist/index.html' %}
+
+{% block title %}Photo Frame List{% endblock %}
+
+{% block body %}
+<main class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-center text-light py-3">
+                    <h4 class="card-title mb-0 text-light">Photo Frame List</h4>
+                </div>
+                
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">SN</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for frame in frames %}
+                                <tr>
+                                    <td>{{ frame.id }}</td>
+                                    <td>
+                                        <img src="{{ frame.image.url }}" alt="{{ frame.name }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'edit_frame' frame.id %}" class="btn btn-sm btn-primary me-2">
+                                            <i class="fas fa-edit me-1"></i> Edit
+                                        </a>
+                                        <button class="btn btn-sm btn-danger delete-frame" data-frame-id="{{ frame.id }}">
+                                            <i class="fas fa-trash me-1"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.delete-frame');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const frameId = this.getAttribute('data-frame-id');
+                confirmDelete(frameId);
+            });
+        });
+    });
+
+    function confirmDelete(frameId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this frame!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/delete_frame/${frameId}/`,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: response.message,
+                            icon: 'success'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to delete the frame.',
+                            icon: 'error'
+                        });
+                    }
+                });
+            }
+        });
+    }
+</script>
+{% endblock %}

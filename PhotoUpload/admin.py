@@ -14,3 +14,7 @@ class WishingCardAdmin(admin.ModelAdmin):
 @admin.register(CardDesign)
 class CardDesignAdmin(admin.ModelAdmin):
     list_display = ('id', 'card_design')
+
+from .models import CustomUser
+
+admin.site.register(CustomUser)

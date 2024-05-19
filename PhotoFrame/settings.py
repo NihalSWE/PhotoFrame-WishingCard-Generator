@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'PhotoUpload',
 ]
 
+AUTH_USER_MODEL = 'PhotoUpload.CustomUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,10 +77,19 @@ WSGI_APPLICATION = 'PhotoFrame.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+     'default': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'photo_fram',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+        'OPTIONS': {
+             'charset': 'utf8',
+            'use_unicode': True, 
+        },
+           }
+
 }
 
 

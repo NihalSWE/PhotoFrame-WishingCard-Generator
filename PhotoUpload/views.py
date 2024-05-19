@@ -1,7 +1,9 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from .forms import WishingCardForm
 from .models import PhotoFrame,WishingCard,CardDesign
 from PIL import Image
+from django.contrib.auth import logout
+from django.http import JsonResponse
 
 def base(request):
     return render(request, 'PhotoUpload/base.html')
@@ -9,13 +11,14 @@ def base(request):
 def home(request):
     return render(request,'PhotoUpload/home.html')
 
+
+
 def photoupload(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
         image = request.FILES.get('image')
         card_design_id = request.POST.get('card_design')
         card_design = CardDesign.objects.get(pk=card_design_id)
-        PhotoFrame.objects.create(name=name, image=image, card_design=card_design)
+        PhotoFrame.objects.create(image=image, card_design=card_design)
         
 
         return redirect('photoupload')
@@ -46,7 +49,7 @@ def download_photo_frame(request, pk):
 
         with open(combined_image_path, 'rb') as f:
             response = HttpResponse(f.read(), content_type='image/png')
-            response['Content-Disposition'] = f'attachment; filename="{photo_frame.name}.png"'
+            response['Content-Disposition'] = f'attachment; filename="PhotoFrame.png"'
         return response
     except Exception as e:
         return HttpResponse(str(e), status=404)
@@ -128,3 +131,101 @@ def download_wishing_card(request, pk):
 
     return response
    
+
+
+
+
+
+   #----------Admin Panel--------------
+from django.contrib.auth.decorators import login_required
+from .forms import CustomAuthenticationForm
+from django.contrib.auth import authenticate, login
+
+
+
+from .models import WishingCard, PhotoFrame
+
+@login_required
+def dashboard(request):
+    total_wishing_cards_uploaded = WishingCard.objects.count()
+    total_photo_frames_created = PhotoFrame.objects.count()
+
+    context = {
+        'total_wishing_cards_uploaded': total_wishing_cards_uploaded,
+        'total_photo_frames_created': total_photo_frames_created,
+    }
+
+    return render(request, 'dist/dashboard.html', context)
+
+
+@login_required
+def profile(request):
+    user = request.user  # Get the currently logged-in user
+    return render(request, 'dist/profile.html', {'user': user})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('dashboard')  # Redirect to dashboard after successful login
+    else:
+        form = CustomAuthenticationForm()
+    return render(request, 'dist/login.html', {'form': form})
+
+def ShowPhotoFrame(request):
+    frames=PhotoFrame.objects.all()
+    return render(request,'dist/showphotoframe.html',{"frames":frames})
+
+
+def edit_frame(request, frame_id):
+    frame = get_object_or_404(PhotoFrame, pk=frame_id)
+    if request.method == 'POST':
+        
+        new_image = request.FILES.get('image')
+       
+        if new_image:
+            frame.image = new_image
+     
+        name = request.POST.get('name')
+        frame.name = name
+        frame.save()
+        return redirect('ShowPhotoFrame') 
+    return render(request, 'dist/edit_frame.html', {'frame': frame})
+
+def delete_frame(request, frame_id):
+    frame = get_object_or_404(PhotoFrame, pk=frame_id)
+    if request.method == 'POST':
+        frame.delete()
+        return JsonResponse({'message': 'Photo frame deleted successfully.'})
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+def ShowCardDesign(request):
+    cards=CardDesign.objects.all()
+    return render(request,'dist/showcarddesign.html',{"cards":cards})
+
+def ShowWishingCards(request):
+    wishes=WishingCard.objects.all()
+    return render(request,'dist/showwishingcards.html',{"wishes":wishes})
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+
+
+from django.contrib import messages
+
+def add_card_design(request):
+    new_card_design = None
+    if request.method == 'POST' and request.FILES.get('card_design'):
+        card_design = request.FILES['card_design']
+        new_card_design = CardDesign.objects.create(card_design=card_design)
+        messages.success(request, 'Card design added successfully.')
+        return redirect('add_card_design')  # Redirect to the same page after processing the POST request
+
+    return render(request, 'dist/add_card_design.html', {'error': 'No file uploaded.' if request.method == 'POST' else '', 'new_card_design': new_card_design})

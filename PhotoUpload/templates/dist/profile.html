@@ -1,0 +1,49 @@
+{% extends 'dist/index.html' %}
+
+{% load static %}
+{% block title %}Profile{% endblock title %}
+
+{% block body %}
+<div class="container my-5">
+  <h1 class="mb-4">Profile</h1>
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white">
+      <h2>{{ user.username }}</h2>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Username:</strong> {{ user.username }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+      </div>
+      <!-- Add more fields as needed -->
+    </div>
+  </div>
+</div>
+{% endblock body %}
+
+{% block extra_css %}
+<style>
+  .container {
+    max-width: 800px;
+  }
+  .card {
+    border: none;
+    border-radius: 8px;
+  }
+  .card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 1.25rem;
+  }
+  .card-body {
+    padding: 1.25rem;
+  }
+  .card-body p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+</style>
+{% endblock extra_css %}

@@ -10,11 +10,6 @@
     <form method="post" enctype="multipart/form-data" class="mb-5 p-4 shadow rounded bg-light" id="photo-frame-form">
         {% csrf_token %}
         <div class="mb-4">
-            <label for="name" class="form-label">Your Name:</label>
-            <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Enter your name" required>
-        </div>
-        
-        <div class="mb-4">
             <label for="image" class="form-label">Upload Profile Picture:</label>
             <input type="file" class="form-control form-control-lg" id="image" name="image" required>
             <small class="form-text text-muted">Please upload a clear photo of yourself.</small>
@@ -162,7 +157,7 @@
     }
 </style>
 
-<script>
+<script>0
     // Add event listener for card design selection
     document.querySelectorAll('.form-check-input').forEach(input => {
         input.addEventListener('change', function() {
