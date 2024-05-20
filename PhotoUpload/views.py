@@ -19,13 +19,12 @@ def photoupload(request):
         card_design_id = request.POST.get('card_design')
         card_design = CardDesign.objects.get(pk=card_design_id)
         PhotoFrame.objects.create(image=image, card_design=card_design)
-        
-
         return redirect('photoupload')
     else:
         card_designs = CardDesign.objects.all()
-        photo_frames = PhotoFrame.objects.all()
-        return render(request, 'PhotoUpload/photoupload.html', {'card_designs': card_designs, 'photo_frames': photo_frames})
+        latest_photo_frame = PhotoFrame.objects.order_by('-id').first()
+        return render(request, 'PhotoUpload/photoupload.html', {'card_designs': card_designs, 'latest_photo_frame': latest_photo_frame})
+
 
 
 
