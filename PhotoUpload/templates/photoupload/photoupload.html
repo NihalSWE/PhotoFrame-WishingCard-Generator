@@ -5,24 +5,39 @@
 
 {% block body %}
 <div class="container py-5">
-    <h1 class="text-center mb-5 display-4" style="background-color: #007bff; color: #fff; padding: 10px;">Create Your Photo Frame</h1>
+    <h1 class="text-4xl font-bold text-center text-white py-6 px-8 bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg shadow-lg">
+        Create Your Photo Frame
+    </h1>
+    
 
-    <form method="post" enctype="multipart/form-data" class="mb-5 p-4 shadow rounded bg-light" id="photo-frame-form">
+    
+
+    <form method="post" enctype="multipart/form-data" class="mb-5 p-8 bg-white rounded-lg shadow-lg">
         {% csrf_token %}
-        <div class="mb-4">
-            <label for="image" class="form-label">Upload Profile Picture:</label>
-            <input type="file" class="form-control form-control-lg" id="image" name="image" required>
-            <small class="form-text text-muted">Please upload a clear photo of yourself.</small>
+        <div class="mb-6">
+            <label for="image" class="block text-lg font-semibold text-gray-800 mb-2">Upload Profile Picture:</label>
+            <input type="file" class="block w-full py-2 px-4 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:border-blue-500" id="image" name="image" required>
+            <small class="block text-sm text-gray-600">Please upload a clear photo of yourself.</small>
         </div>
         
-        <div class="mb-4">
-            <p class="form-label mb-3">Choose Card Design:</p>
-            <div class="d-flex flex-wrap justify-content-center">
+        <!-- Image cropping container -->
+        <div class="mb-6" style="max-width: 400px;">
+            <label for="cropped-image" class="block text-lg font-semibold text-gray-800 mb-2">Crop Image:</label>
+            <div class="card border border-gray-300 rounded-lg overflow-hidden" style="height: auto; max-height: 300px;">
+                <img src="#" alt="Cropped Image Preview" id="cropped-image" class="w-full h-full object-cover">
+            </div>
+        </div>
+        
+        
+        
+        <div class="mb-6">
+            <p class="block text-lg font-semibold text-gray-800 mb-2">Choose Card Design:</p>
+            <div class="grid grid-cols-2 gap-4">
                 {% for card_design in card_designs %}
-                    <div class="form-check form-check-inline m-2">
-                        <input class="form-check-input d-none" type="radio" name="card_design" id="card_design_{{ card_design.id }}" value="{{ card_design.id }}" required>
-                        <label class="form-check-label card-design-label" for="card_design_{{ card_design.id }}">
-                            <img src="{{ card_design.card_design.url }}" alt="Card Design {{ card_design.id }}" class="card-design-image rounded shadow">
+                    <div class="flex items-center justify-center">
+                        <input class="hidden" type="radio" name="card_design" id="card_design_{{ card_design.id }}" value="{{ card_design.id }}" required>
+                        <label class="cursor-pointer" for="card_design_{{ card_design.id }}">
+                            <img src="{{ card_design.card_design.url }}" alt="Card Design {{ card_design.id }}" class="w-24 h-24 rounded-lg shadow-lg transform transition duration-300 hover:scale-105">
                         </label>
                     </div>
                 {% endfor %}
@@ -30,12 +45,22 @@
         </div>
         
         <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-lg px-5 btn-create-photo-frame">Create Your Photo Frame</button>
+            <button type="submit" class="inline-block bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white text-lg font-semibold py-3 px-8 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105">
+                Create Your Photo Frame
+            </button>
         </div>
     </form>
+    
 
     <hr class="my-5">
+<<<<<<< HEAD
     <h1 class="text-center mb-5 display-4" style="background-color: #007bff; color: #fff; padding: 10px;">Your Photo Frame</h1>
+=======
+    <h1 class="text-4xl font-bold text-center text-white py-4 px-6 bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg shadow-lg mb-8">
+        Photo Frames
+    </h1>
+    
+>>>>>>> ffcc7c2 (Modifying home interface,PhotoFram form,Navbar)
 
     <div class="row justify-content-center">
         {% if latest_photo_frame %}
@@ -46,9 +71,17 @@
                         <div class="card-design-wrapper position-absolute top-0 start-0 w-100 h-100" style="background-image: url('{{ latest_photo_frame.card_design.card_design.url }}'); background-size: cover; background-position: center;"></div>
                     </div>
                     <div class="card-body text-center">
+<<<<<<< HEAD
                         <h5 class="card-title mt-4">{{ latest_photo_frame.name }}</h5>
                         <a href="{% url 'download_photo_frame' pk=latest_photo_frame.pk %}" class="btn btn-outline-primary mt-3">Download</a>
+=======
+                        <h5 class="card-title mt-4">{{ photo_frame.name }}</h5>
+                        <a href="{% url 'download_photo_frame' pk=photo_frame.pk %}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Download
+                        </a>
+>>>>>>> ffcc7c2 (Modifying home interface,PhotoFram form,Navbar)
                     </div>
+                    
                 </div>
             </div>
         {% else %}
@@ -63,102 +96,10 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
 
-    .form-control-lg {
-        padding: 15px;
-        font-size: 1.25rem;
-        border-radius: 0.3rem;
-    }
-
-    .form-label {
-        font-weight: bold;
-        color: #495057;
-    }
-
-    .card-design-label {
-        cursor: pointer;
-    }
-
-    .card-design-image {
-        width: 150px;
-        height: auto;
-        border: 2px solid transparent;
-        transition: border-color 0.3s ease;
-    }
-
-    .card-design-image:hover,
-    .form-check-input:checked + .card-design-label .card-design-image {
-        border: 2px solid #007bff;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1.25rem;
-        border-radius: 0.3rem;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-outline-primary {
-        color: #007bff;
-        border: 2px solid #007bff;
-        padding: 10px 20px;
-        font-size: 1.25rem;
-        border-radius: 0.3rem;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .btn-outline-primary:hover {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    .square-image-wrapper {
-        width: 300px;
-        height: 300px;
-        overflow: hidden;
-        border-radius: 50%;
-        margin: auto;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-design-wrapper {
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-    }
-
-    .card-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #343a40;
-    }
-
-    .card {
-        border: none;
-        border-radius: 1rem;
-        overflow: hidden;
-    }
-
-    @media (max-width: 768px) {
-        .card-design-image {
-            width: 100px;
-        }
-
-        .square-image-wrapper {
-            width: 200px;
-            height: 200px;
-        }
-    }
+    /* Add your custom styles here */
 </style>
 
+<<<<<<< HEAD
 <script>
     // Add event listener for card design selection
     document.querySelectorAll('.form-check-input').forEach(input => {
@@ -167,19 +108,23 @@
             document.querySelectorAll('.card-design-label').forEach(label => {
                 label.classList.remove('card-design-selected');
             });
+=======
+>>>>>>> ffcc7c2 (Modifying home interface,PhotoFram form,Navbar)
 
-            // Add border to selected card design
-            this.nextElementSibling.classList.add('card-design-selected');
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const image = document.getElementById('image');
+        const croppedImage = document.getElementById('cropped-image');
+
+        const cropper = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1,
+            crop(event) {
+                const canvas = cropper.getCroppedCanvas();
+                croppedImage.src = canvas.toDataURL();
+            },
         });
-    });
-
-    // Update button text based on form status
-    const form = document.getElementById('photo-frame-form');
-    const button = form.querySelector('.btn-create-photo-frame');
-
-    form.addEventListener('submit', function() {
-        button.textContent = 'Creating Photo Frame...';
-        button.disabled = true;
     });
 </script>
 {% endblock %}

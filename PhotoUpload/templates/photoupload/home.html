@@ -3,63 +3,16 @@
 {% block title %} Home {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h1 class="display-4 mb-4">Welcome to PhotoFrame and Wishing Card Generator</h1>
-            <p class="lead">Create stunning photo frames and personalized wishing cards in just a few clicks!</p>
-            <div class="d-grid gap-3">
-                <a href="{% url 'photoupload' %}" class="btn btn-primary btn-lg">Create Photo Frame</a>
-                <a href="{% url 'wishingcard' %}" class="btn btn-success btn-lg">Create Wishing Card</a>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-lg w-full bg-white rounded-lg shadow-lg p-8 space-y-8">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Welcome to PhotoFrame and Wishing Card Generator</h1>
+            <p class="text-lg text-gray-600 mb-6">Create stunning photo frames and personalized wishing cards in just a few clicks!</p>
+            <div class="grid gap-4">
+                <a href="{% url 'photoupload' %}" class="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white text-lg py-3 px-4 rounded-lg shadow-md hover:from-blue-500 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transform hover:scale-105 transition-transform duration-200">Create Photo Frame</a>
+                <a href="{% url 'wishingcard' %}" class="w-full bg-gradient-to-r from-green-400 to-green-600 text-white text-lg py-3 px-4 rounded-lg shadow-md hover:from-green-500 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transform hover:scale-105 transition-transform duration-200">Create Wishing Card</a>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-    body {
-        background-color: #f8f9fa;
-        font-family: 'Arial', sans-serif;
-    }
-
-    .container {
-        max-width: 800px;
-    }
-
-    .btn-lg {
-        padding: 15px 30px;
-        font-size: 1.5rem;
-        border-radius: 0.5rem;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
-    }
-
-    .btn-success:hover {
-        background-color: #218838;
-    }
-
-    .lead {
-        font-size: 1.25rem;
-        color: #6c757d;
-        margin-bottom: 30px;
-    }
-
-    .display-4 {
-        font-size: 2.5rem;
-        color: #343a40;
-        font-weight: bold;
-    }
-</style>
 {% endblock %}

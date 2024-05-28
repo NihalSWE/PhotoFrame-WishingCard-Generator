@@ -8,105 +8,38 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
     <title>PhotoFrame And Wishing Card Generator | {% block title %} {% endblock %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
-        
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.8rem;
-            letter-spacing: 1px;
-            margin-right: 20px; /* Adjusted margin */
-        }
-        
-        .navbar-toggler {
-            border-color: transparent; /* Changed border color to transparent */
-        }
-        
-        .navbar-toggler-icon {
-            background-color: #343a40; /* Changed background color to match the navbar background */
-            border-radius: 3px; /* Added border radius */
-            padding: 2px; /* Added padding */
-            height: 24px; /* Adjusted height */
-            width: 24px; /* Adjusted width */
-        }
-        
-        .navbar-toggler-icon::before,
-        .navbar-toggler-icon::after {
-            {% comment %} background-color: #fff; /* Changed inner lines color to white */ {% endcomment %}
-            border-radius: 2px; /* Added border radius */
-            content: ''; /* Added content */
-            display: block; /* Display as block */
-            height: 2px; /* Adjusted height */
-            width: 14px; /* Adjusted width */
-            position: absolute; /* Positioned absolutely */
-            top: 50%; /* Center vertically */
-            transform: translateY(-50%); /* Center vertically */
-        }
-        
-        .navbar-toggler-icon::before {
-            left: 5px; /* Positioned to the left with some padding */
-        }
-        
-        .navbar-toggler-icon::after {
-            right: 5px; /* Positioned to the right with some padding */
-        }
-        
-        .navbar-nav .nav-link {
-            font-size: 1.2rem;
-            margin-right: 1.5rem;
-            color: #fff;
-            transition: color 0.3s;
-        }
-        
-        .navbar-nav .nav-link:hover {
-            color: #ffc107;
-        }
-        
-        .navbar-collapse {
-            justify-content: flex-end;
-        }
-        
-        .navbar {
-            background-color: #343a40;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-        }
-        
-        .navbar-nav {
-            margin-right: auto;
-        }
-        
-        .nav-item.active .nav-link {
-            background-color: #ffc107;
-            border-radius: 0.5rem;
-        }
-        
-        .nav-item.active .nav-link:hover {
-            background-color: #e0a800;
-        }
     </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">PF & WC Generator</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Admin</a>
-                    </li>
+<body class="bg-gray-100">
+    <nav class="bg-gray-800 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a class="text-white text-2xl font-bold tracking-wide" href="{% url 'home' %}">PF & WC Generator</a>
+                <div class="lg:hidden">
+                    <button class="text-white focus:outline-none focus:ring-2 focus:ring-white" id="nav-toggle">
+                        <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M4 5h16M4 12h16m-7 7h7"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="hidden lg:flex space-x-4">
+                    <a href="{% url 'home' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium">Home</a>
+                    <a href="{% url 'login' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium">Admin</a>
                     <!-- Add more navigation items as needed -->
-                </ul>
+                </div>
+            </div>
+            <div class="hidden lg:hidden" id="nav-content">
+                <a href="{% url 'home' %}" class="block text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="{% url 'login' %}" class="block text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Admin</a>
+                <!-- Add more navigation items as needed -->
             </div>
         </div>
     </nav>
@@ -114,8 +47,23 @@
     {% block body %}
     {% endblock %}
 
-    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Optional JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Include Cropper.js from jsDelivr -->
+<script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
+
+    <!-- Toggle script for navbar -->
+    <script>
+        document.getElementById('nav-toggle').onclick = function() {
+            var navContent = document.getElementById('nav-content');
+            if (navContent.classList.contains('hidden')) {
+                navContent.classList.remove('hidden');
+            } else {
+                navContent.classList.add('hidden');
+            }
+        };
+    </script>
 
     {% block extra_js %}
     {% endblock %}
